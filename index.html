@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>مراجع رسالتي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>*{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<style>
+/* Layout: a researcher's reference ledger — file intake strip on top, wide extraction ledger below, detail sheet slides in from the side */
+:root{
+  --bg:#f3f4f7; --surface:#ffffff; --sunk:#eceef3; --ink:#1b2130; --muted:#5d6577; --line:#d9dce5;
+  --accent:#23406e; --accent-soft:#e3e9f4; --mark:#b5761b; --mark-soft:#f7ecd9; --danger:#a23a3a;
+  --f-display:"Noto Naskh Arabic","Amiri","Times New Roman",serif;
+  --f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141821; --surface:#1c212c; --sunk:#232937; --ink:#e7e9ef; --muted:#9aa2b4; --line:#323a4b;
+  --accent:#8fb0e6; --accent-soft:#25324a; --mark:#e0a54d; --mark-soft:#3a2f1e; --danger:#e08585; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141821; --surface:#1c212c; --sunk:#232937; --ink:#e7e9ef; --muted:#9aa2b4; --line:#323a4b;
+  --accent:#8fb0e6; --accent-soft:#25324a; --mark:#e0a54d; --mark-soft:#3a2f1e; --danger:#e08585; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+.wrap{max-width:1280px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:14px}
+h1{font-family:var(--f-display);font-size:30px;margin:0;line-height:1.3;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:14px}
+.count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.count b{color:var(--ink);font-size:20px;font-family:var(--f-display)}
+h2{font-family:var(--f-display);font-size:20px;margin:0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.btn{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.danger{color:var(--danger)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,.drop:focus-visible,tr:focus-visible{outline:2px solid var(--mark);outline-offset:2px}
+.btn[disabled]{opacity:.5;cursor:default}
+
+/* intake */
+.intake{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:16px}
+@media (max-width:760px){.intake{grid-template-columns:minmax(0,1fr)}}
+.drop{border:1.5px dashed var(--accent);border-radius:12px;background:var(--accent-soft);padding:22px 16px;text-align:center;cursor:pointer;display:grid;gap:6px;place-items:center}
+.drop.over{background:var(--mark-soft);border-color:var(--mark)}
+.drop strong{font-family:var(--f-display);font-size:18px}
+.drop small{color:var(--muted)}
+.drop svg{width:34px;height:34px;stroke:var(--accent);fill:none;stroke-width:1.6}
+.files{background:var(--surface);border:1px solid var(--line);border-radius:12px;max-height:260px;overflow:auto;min-width:0}
+.files ul{list-style:none;margin:0;padding:0}
+.files li{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--line);min-width:0}
+.files li:last-child{border-bottom:0}
+.fname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fname a{color:var(--ink)}
+.ext{font-size:11px;letter-spacing:.06em;font-weight:600;color:var(--muted);background:var(--sunk);border-radius:4px;padding:1px 6px;direction:ltr}
+.pill{font-size:12px;border-radius:999px;padding:1px 10px;white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.run{background:var(--mark-soft);color:var(--mark)}
+.pill.err{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.files .empty{padding:18px;color:var(--muted);text-align:center}
+.note{font-size:13px;color:var(--mark);background:var(--mark-soft);border-radius:8px;padding:8px 12px;margin:0}
+
+/* ledger */
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:6px 12px;background:var(--surface);color:var(--ink);min-width:0;width:220px;max-width:100%}
+.table-box{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:1100px;font-size:13.5px}
+th{position:sticky;top:0;background:var(--sunk);text-align:right;font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{vertical-align:top;padding:12px;border-bottom:1px solid var(--line);white-space:pre-line}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--accent-soft)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:32px}
+td .t{font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1.5;color:var(--ink)}
+td .meta{color:var(--muted);font-size:12.5px;margin-top:4px}
+.clamp{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.blank{padding:36px 16px;text-align:center;color:var(--muted)}
+.blank b{display:block;font-family:var(--f-display);color:var(--ink);font-size:17px;margin-bottom:4px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,14,22,.35);z-index:20}
+.sheet{position:fixed;top:0;bottom:0;left:0;width:min(560px,100%);background:var(--surface);border-right:1px solid var(--line);z-index:21;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px)}
+.sheet-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.sheet-head h3{font-family:var(--f-display);margin:0;font-size:19px;line-height:1.5}
+.sheet-body{overflow:auto;padding:14px 18px;display:grid;gap:14px}
+.field label{display:block;font-size:12.5px;font-weight:600;color:var(--accent);margin-bottom:4px;letter-spacing:.02em}
+.field textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;line-height:1.7;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);color:var(--ink);resize:vertical;field-sizing:content;min-height:44px}
+.field.rel label{color:var(--mark)}
+.sheet-foot{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--danger)}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:calc(16px + env(safe-area-inset-right,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:14px;z-index:30}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:slide .18s ease-out}@keyframes slide{from{transform:translateX(-24px);opacity:.6}}}
+</style><style>
+.key{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.key p{margin:0;color:var(--muted);font-size:13.5px}
+.key-row{display:flex;gap:8px;flex-wrap:wrap}
+.key-row input{flex:1;min-width:0;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:6px 12px;background:var(--bg);color:var(--ink);direction:ltr}
+.key.ok{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.key a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div>
+      <h1>مراجع رسالتي</h1>
+      <p class="sub">ارفعي الدراسة، ويُفرَّغ محتواها تلقائياً في الجدول: العنوان، المشكلة، الأهداف، المنهجية، النتائج، التوصيات.</p>
+    </div>
+    <div class="count"><b id="cnt">0</b> مرجع</div>
+  </header>
+
+  <section id="keybox"></section>
+
+  <section>
+    <div class="sec-head"><h2>الملفات</h2></div>
+    <div class="intake">
+      <div>
+        <label class="drop" id="drop" tabindex="0">
+          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+          <strong>اسحبي الملفات هنا</strong>
+          <small>أو اضغطي للاختيار · PDF، Word، نص</small>
+          <input type="file" id="pick" accept=".pdf,.docx,.txt,.md" multiple hidden>
+        </label>
+      </div>
+      <div class="files" id="files"><div class="empty">لم تُرفع ملفات بعد.</div></div>
+    </div>
+    <p class="note" id="notice" hidden></p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>جدول المحتوى</h2>
+      <div class="tools">
+        <input class="search" id="q" type="search" placeholder="ابحثي في المراجع…">
+        <button class="btn" id="csv">تصدير Excel</button>
+        <button class="btn" id="bak">نسخة احتياطية</button>
+        <label class="btn" for="restore">استرجاع</label>
+        <input type="file" id="restore" accept=".json" hidden>
+      </div>
+    </div>
+    <div class="table-box">
+      <table>
+        <thead><tr>
+          <th>#</th><th style="min-width:220px">العنوان والباحث</th><th style="min-width:200px">المشكلة</th>
+          <th style="min-width:200px">الأهداف</th><th style="min-width:160px">المنهجية والعينة</th>
+          <th style="min-width:220px">النتائج</th><th style="min-width:220px">التوصيات</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="blank" id="blank"></div>
+    </div>
+  </section>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" dir="rtl" lang="ar" hidden>
+  <div class="sheet-head"><h3 id="sh-title"></h3><button class="btn" id="sh-close" aria-label="إغلاق">✕</button></div>
+  <div class="sheet-body" id="sh-body"></div>
+  <div class="sheet-foot">
+    <button class="btn primary" id="sh-save">حفظ التعديلات</button>
+    <button class="btn" id="sh-file" hidden>فتح الملف</button>
+    <span style="flex:1"></span>
+    <button class="btn danger" id="sh-del">حذف المرجع</button>
+    <span class="confirm" id="sh-confirm" hidden>متأكدة؟ <button class="btn danger" id="sh-yes">نعم، احذفي</button><button class="btn" id="sh-no">إلغاء</button></span>
+  </div>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const FIELDS=[
+  ["title","العنوان"],["authors","الباحث/الباحثون"],["year","سنة النشر"],["type","نوع الدراسة"],["place","الجهة / البلد"],
+  ["problem","مشكلة الدراسة"],["objectives","الأهداف"],["questions","الأسئلة / الفرضيات"],["method","المنهجية"],
+  ["sample","المجتمع والعينة"],["tools","أدوات الدراسة"],["results","النتائج"],["recommendations","التوصيات"],
+  ["relevance","صلتها برسالتي"]
+];
+const THESIS="مأسسة المسؤولية المجتمعية في المناهج الأكاديمية بجامعة الملك عبدالعزيز، والفجوة بين مخرجات البحث العلمي للدراسات العليا والتطبيق الواقعي";
+const MODEL="claude-sonnet-5-5";
+const $=id=>document.getElementById(id);
+const LS={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){}}};
+
+/* ---------- IndexedDB: refs + original files, stored in this browser only ---------- */
+let idb;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open("marajei",1);r.onupgradeneeded=()=>{r.result.createObjectStore("refs",{keyPath:"id"});r.result.createObjectStore("files")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function tx(store,mode,fn){return new Promise((res,rej)=>{const t=idb.transaction(store,mode);const s=t.objectStore(store);const r=fn(s);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})}
+const putRef=r=>tx("refs","readwrite",s=>s.put(r));
+const delRef=id=>tx("refs","readwrite",s=>s.delete(id));
+const allRefs=()=>tx("refs","readonly",s=>s.getAll());
+const putFile=(id,blob)=>tx("files","readwrite",s=>s.put(blob,id));
+const getFile=id=>tx("files","readonly",s=>s.get(id));
+const delFile=id=>tx("files","readwrite",s=>s.delete(id));
+
+let refs=[];const pending=new Map();let openId=null;
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2800)}
+function note(m){const n=$("notice");n.textContent=m||"";n.hidden=!m}
+function extOf(n){return (n.split(".").pop()||"").toLowerCase()}
+async function reload(){refs=(await allRefs()).sort((a,b)=>a.addedAt-b.addedAt);render()}
+
+/* ---------- API key ---------- */
+function renderKey(){
+  const k=LS.get("anthropic_key");const box=$("keybox");
+  if(k){box.innerHTML=`<div class="key ok"><span>مفتاح Claude محفوظ في هذا المتصفح فقط.</span><button class="btn" id="k-clear">تغيير المفتاح</button></div>`;$("k-clear").onclick=()=>{LS.set("anthropic_key",null);renderKey()};return}
+  box.innerHTML=`<div class="key"><strong>خطوة أولى: مفتاح Claude</strong>
+  <p>التفريغ يتم عبر Claude، ويحتاج مفتاح API من حسابك في <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. المفتاح يُحفظ في متصفحك فقط ولا يُرسل لأي جهة غير Anthropic.</p>
+  <div class="key-row"><input id="k-in" type="password" placeholder="sk-ant-..." autocomplete="off"><button class="btn primary" id="k-save">حفظ</button></div></div>`;
+  $("k-save").onclick=()=>{const v=$("k-in").value.trim();if(!v.startsWith("sk-")){toast("المفتاح يبدأ بـ sk-ant");return}LS.set("anthropic_key",v);renderKey();toast("تم حفظ المفتاح")};
+}
+
+/* ---------- rendering ---------- */
+function renderFiles(){
+  const box=$("files");
+  const items=[...[...pending.entries()].map(([k,p])=>({k,...p})),...refs.map(r=>({k:r.id,name:r.fileName||r.title,ext:r.ext||"",status:"ok",hasFile:r.hasFile}))];
+  if(!items.length){box.innerHTML='<div class="empty">لم تُرفع ملفات بعد.</div>';return}
+  box.innerHTML="<ul>"+items.map(it=>{
+    const pill=it.status==="ok"?'<span class="pill ok">تم التفريغ</span>':it.status==="err"?`<span class="pill err" title="${esc(it.msg)}">${esc(it.msg||"تعذّر")}</span>`:`<span class="pill run">${esc(it.msg||"جاري التفريغ…")}</span>`;
+    const nm=it.hasFile?`<a href="#" data-open="${esc(it.k)}">${esc(it.name)}</a>`:esc(it.name);
+    const act=it.status==="err"?`<button class="btn" data-retry="${esc(it.k)}">إعادة</button><button class="btn" data-drop="${esc(it.k)}">إزالة</button>`:"";
+    return `<li><span class="ext">${esc(it.ext)}</span><span class="fname" title="${esc(it.name)}">${nm}</span>${pill}${act}</li>`}).join("")+"</ul>";
+}
+function renderTable(){
+  const q=$("q").value.trim();
+  const list=refs.filter(r=>!q||FIELDS.some(([k])=>String(r[k]||"").includes(q)));
+  $("cnt").textContent=refs.length;
+  $("blank").hidden=list.length>0;
+  $("blank").innerHTML=refs.length?"<b>لا نتائج</b>لا يوجد مرجع يطابق بحثك.":"<b>الجدول فارغ</b>ارفعي أول دراسة من خانة الملفات، وسيظهر ملخصها هنا خلال دقيقة تقريباً.";
+  $("rows").innerHTML=list.map((r,i)=>`<tr tabindex="0" data-id="${esc(r.id)}">
+    <td class="n">${i+1}</td>
+    <td><div class="t">${esc(r.title)}</div><div class="meta">${esc([r.authors,r.year].filter(Boolean).join(" · "))}</div></td>
+    <td><div class="clamp">${esc(r.problem)}</div></td>
+    <td><div class="clamp">${esc(r.objectives)}</div></td>
+    <td><div class="clamp">${esc([r.method,r.sample].filter(Boolean).join("\n"))}</div></td>
+    <td><div class="clamp">${esc(r.results)}</div></td>
+    <td><div class="clamp">${esc(r.recommendations)}</div></td></tr>`).join("");
+}
+function render(){renderFiles();renderTable()}
+
+async function openOriginal(id){const b=await getFile(id);if(!b){toast("الملف الأصلي غير محفوظ");return}const u=URL.createObjectURL(b);window.open(u,"_blank");setTimeout(()=>URL.revokeObjectURL(u),60000)}
+
+/* ---------- sheet ---------- */
+function openSheet(id){
+  const r=refs.find(x=>x.id===id);if(!r)return;openId=id;
+  $("sh-title").textContent=r.title||"مرجع";
+  $("sh-body").innerHTML=FIELDS.map(([k,l])=>`<div class="field${k==="relevance"?" rel":""}"><label for="f-${k}">${l}</label><textarea id="f-${k}" rows="2">${esc(r[k])}</textarea></div>`).join("");
+  $("sh-file").hidden=!r.hasFile;
+  $("sh-confirm").hidden=true;$("sh-del").hidden=false;
+  $("sheet").hidden=false;$("scrim").hidden=false;
+}
+function closeSheet(){$("sheet").hidden=true;$("scrim").hidden=true;openId=null}
+$("scrim").onclick=closeSheet;$("sh-close").onclick=closeSheet;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+$("rows").addEventListener("click",e=>{const tr=e.target.closest("tr");if(tr)openSheet(tr.dataset.id)});
+$("rows").addEventListener("keydown",e=>{if(e.key==="Enter"){const tr=e.target.closest("tr");if(tr)openSheet(tr.dataset.id)}});
+$("sh-file").onclick=()=>openId&&openOriginal(openId);
+$("sh-save").onclick=async()=>{
+  const r=refs.find(x=>x.id===openId);if(!r)return;FIELDS.forEach(([k])=>r[k]=$("f-"+k).value.trim());
+  await putRef(r);toast("تم الحفظ");closeSheet();reload();
+};
+$("sh-del").onclick=()=>{$("sh-del").hidden=true;$("sh-confirm").hidden=false};
+$("sh-no").onclick=()=>{$("sh-del").hidden=false;$("sh-confirm").hidden=true};
+$("sh-yes").onclick=async()=>{const id=openId;await delRef(id);await delFile(id);toast("تم حذف المرجع");closeSheet();reload()};
+$("q").addEventListener("input",renderTable);
+
+/* ---------- extraction ---------- */
+function toB64(buf){let s="";const b=new Uint8Array(buf);for(let i=0;i<b.length;i+=0x8000)s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(s)}
+async function pdfInfo(buf){
+  const doc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;let out="";
+  for(let p=1;p<=doc.numPages;p++){const c=await (await doc.getPage(p)).getTextContent();out+=c.items.map(i=>i.str).join(" ")+"\n"}
+  return {text:out,pages:doc.numPages,scanned:out.replace(/\s/g,"").length<doc.numPages*80};
+}
+function excerpt(t){t=t.replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n");return t.length<=120000?t:t.slice(0,80000)+"\n\n[...]\n\n"+t.slice(-40000)}
+function instructions(){
+  return `أنت مساعد بحثي يفرّغ الدراسات السابقة لباحثة ماجستير في القيادة والسياسات التربوية.
+أعد كائن JSON واحداً فقط، بدون أي نص قبله أو بعده، بهذه المفاتيح (كل القيم نصوص بالعربية الفصحى):
+{"title":"","authors":"","year":"","type":"رسالة ماجستير/أطروحة دكتوراه/بحث محكّم/كتاب/تقرير","place":"الجامعة أو المجلة والبلد","problem":"","objectives":"","questions":"","method":"","sample":"","tools":"","results":"","recommendations":"","relevance":""}
+القواعد:
+- لا تخترع شيئاً. إن لم يرد العنصر اكتب "غير مذكور".
+- إن كانت الدراسة بالإنجليزية فترجم المحتوى إلى العربية، واترك العنوان الأصلي كما هو.
+- الأهداف والأسئلة والنتائج والتوصيات: قائمة مرقمة، كل بند في سطر مستقل، مختصرة ودقيقة.
+- المشكلة: فقرة من 2-4 جمل.
+- relevance: جملتان عن صلة الدراسة بموضوع رسالة الباحثة: «${THESIS}»، وكيف يمكن الاستفادة منها.`;
+}
+async function askClaude(content){
+  const key=LS.get("anthropic_key");if(!key)throw {msg:"أدخلي مفتاح Claude أولاً"};
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:MODEL,max_tokens:6000,messages:[{role:"user",content}]})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){const m={401:"المفتاح غير صحيح",403:"المفتاح غير مصرّح",429:"ضغط مرتفع، أعيدي لاحقاً",413:"الملف كبير جداً",529:"الخدمة مشغولة، أعيدي لاحقاً"}[r.status];throw {msg:m||(j.error&&j.error.message)||"تعذّر التفريغ"}}
+  const txt=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join("");
+  const a=txt.indexOf("{"),b=txt.lastIndexOf("}");if(a<0||b<a)throw {msg:"رد غير مكتمل، أعيدي المحاولة"};
+  return JSON.parse(txt.slice(a,b+1));
+}
+async function processFile(k){
+  const p=pending.get(k);if(!p)return;const file=p.file;
+  const set=(status,msg)=>{p.status=status;p.msg=msg;renderFiles()};
+  try{
+    if(!LS.get("anthropic_key")){set("err","أدخلي مفتاح Claude أولاً");return}
+    set("run","قراءة الملف…");
+    const buf=await file.arrayBuffer();let content;
+    if(p.ext==="pdf"){
+      const info=await pdfInfo(buf);
+      if(info.scanned)note(`«${p.name}» ملف ممسوح ضوئياً (صور بلا نص). سيقرؤه Claude كصور، وراجعي النتيجة لأن الدقة قد تقل.`);
+      if(file.size<=30*1024*1024&&info.pages<=100){
+        content=[{type:"document",source:{type:"base64",media_type:"application/pdf",data:toB64(buf)}},{type:"text",text:instructions()}];
+      }else if(!info.scanned){
+        content=[{type:"text",text:instructions()+"\n\nنص الدراسة:\n"+excerpt(info.text)}];
+      }else{set("err","ملف ممسوح وكبير (أكثر من 100 صفحة)");return}
+    }else{
+      const text=p.ext==="docx"?(await mammoth.extractRawText({arrayBuffer:buf})).value:new TextDecoder().decode(buf);
+      if(text.trim().length<200){set("err","الملف شبه فارغ");return}
+      content=[{type:"text",text:instructions()+"\n\nنص الدراسة:\n"+excerpt(text)}];
+    }
+    set("run","جاري التفريغ…");
+    const data=await askClaude(content);
+    const id="r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const row={id,fileName:p.name,ext:p.ext,hasFile:true,addedAt:Date.now()};
+    FIELDS.forEach(([f])=>row[f]=String(data[f]??"غير مذكور"));
+    await putFile(id,file);await putRef(row);
+    pending.delete(k);await reload();toast("تم تفريغ «"+(row.title||p.name).slice(0,40)+"»");
+  }catch(e){set("err",(e&&e.msg)||"تعذّر التفريغ")}
+}
+let queue=Promise.resolve();
+function addFiles(list){
+  for(const file of list){
+    const ext=extOf(file.name);
+    if(!["pdf","docx","txt","md"].includes(ext)){toast("نوع غير مدعوم: "+file.name);continue}
+    const k="p"+Math.random().toString(36).slice(2);
+    pending.set(k,{name:file.name,ext,status:"run",msg:"في الانتظار…",file});
+    queue=queue.then(()=>processFile(k));
+  }
+  renderFiles();
+}
+$("files").addEventListener("click",e=>{
+  const t=e.target;
+  if(t.dataset.open){e.preventDefault();openOriginal(t.dataset.open)}
+  if(t.dataset.retry){pending.get(t.dataset.retry).status="run";queue=queue.then(()=>processFile(t.dataset.retry));renderFiles()}
+  if(t.dataset.drop){pending.delete(t.dataset.drop);renderFiles()}
+});
+const drop=$("drop");
+$("pick").addEventListener("change",e=>{addFiles(e.target.files);e.target.value=""});
+drop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("pick").click()}});
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+
+/* ---------- export / backup ---------- */
+function save(name,data,type){const u=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000)}
+$("csv").onclick=()=>{
+  if(!refs.length){toast("لا توجد مراجع بعد");return}
+  const cell=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const lines=[FIELDS.map(f=>cell(f[1])).join(",")].concat(refs.map(r=>FIELDS.map(([k])=>cell(r[k])).join(",")));
+  save("مراجع-رسالتي.csv","﻿"+lines.join("\r\n"),"text/csv");
+};
+$("bak").onclick=()=>{if(!refs.length){toast("لا توجد مراجع بعد");return}save("مراجع-رسالتي-نسخة.json",JSON.stringify(refs),"application/json")};
+$("restore").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const arr=JSON.parse(await f.text());let n=0;for(const r of arr){if(r&&r.id&&r.title!==undefined){r.hasFile=!!(await getFile(r.id));await putRef(r);n++}}await reload();toast("تم استرجاع "+n+" مرجع")}catch(_){toast("ملف النسخة غير صالح")}
+};
+
+/* ---------- boot ---------- */
+(async()=>{
+  renderKey();
+  try{idb=await openDB();await reload()}catch(_){note("المتصفح يمنع الحفظ المحلي (ربما وضع التصفح الخفي). افتحي الصفحة في نافذة عادية.")}
+  render();
+})();
+</script>
+</body>
+</html>
